@@ -1,0 +1,55 @@
+CHECKS — robot-apology (u-suga-the-robot-apology-dd96bb59)
+Build session: 2026-11-25 ~02:50-03:05 WIB. All runs below in this session.
+
+APOLOGY (chosen)
+  "I watered the plastic fern on your desk for six weeks and logged it as thriving.
+  Now I check for roots before I water anything, and I file growth reports only for plants that can grow."
+  184 bytes, 184 characters, 2 lines, no trailing newline.
+
+QUALITY REVIEW (brief -> evidence)
+  1. Is a robot apology, two lines, confession first, resolve
+     second: line 1 apologizes for one specific mistake in a
+     single sentence; line 2 says what it learned and what it
+     will do differently in a single sentence. On subject.
+  2. Mistake concrete and human-scale: watering a plastic fern
+     for six weeks and logging it as thriving — a small, exact
+     slip a person would really make, not a vague system
+     failure or a joke about being a machine.
+  3. Lesson follows from that exact mistake and names changed
+     behaviour: check for roots before watering (verify the
+     thing is alive before tending it) and file growth reports
+     only for plants that can grow (stop reporting growth that
+     cannot happen) — two concrete behaviours, not a generic
+     promise to do better.
+  4. Both sentences read cleanly, each doing its own job, no
+     padding: 80 + 103 characters, one sentence per line.
+  5. Machine voice, warm and a little rueful rather than cute:
+     "logged it as thriving" is the machine filing a report
+     it is quietly embarrassed by.
+  Gate: 1-400 characters — 184, PASS. Deterministic: no fetch,
+  no randomness, no clock.
+
+RUNS
+  v1 (first write): node main.ts, MAKEFUN_OUTPUT_DIR=/tmp/ra-out-v1
+    exit 1 — control-character guard rejected the newline that
+    separates the two lines (the guard wrongly treated it as a
+    smuggled control character). No entry.txt written.
+  v2 (real revision 1: control check now runs on the text with
+    the one joining newline removed; added package.json
+    {"type":"module"}): node (v24.22.1) -> /tmp/ra-out-v2,
+    exit 0, 184 bytes, 2 lines, no trailing newline.
+  v3 (real revision 2: added per-line guards — no double spaces,
+    no leading/trailing whitespace): node -> /tmp/ra-out-v3,
+    exit 0, 184 bytes, byte-identical to v2.
+  Negative tests (copies outside the repo):
+    479-char text -> exit 1, no entry.txt ("text is 479
+    characters, must be 1-400").
+    double space inside a line -> exit 1, no entry.txt
+    ("lines must not contain double spaces").
+  Grader simulation (real Node 22.21.1 binary
+  ~/workspace/makefun/_tools/node22/bin/node): entry dir
+  read-only 555, run as user 65534 (nobody) from cwd `/`, no
+  network (unshare -n), clean env, MAKEFUN_OUTPUT_DIR to an
+  empty writable dir holding a stale file — exit 0 in 0.137 s,
+  output byte-identical to the Node 24 run, stale file intact,
+  output directory never deleted.
